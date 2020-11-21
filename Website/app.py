@@ -11,17 +11,17 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from config import username, password
+#from config import username, password
 
 #engine = create_engine(os.environ.get('DATABASE_URL', ''))
 
 
-engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Project2')
+#engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Project2')
 
-Base = automap_base()
-Base.prepare(engine, reflect=True)
+# Base = automap_base()
+# Base.prepare(engine, reflect=True)
 
-Stock = Base.classes.Stock
+# Stock = Base.classes.Stock
 
 #################################################
 # Flask Setup
@@ -42,9 +42,20 @@ def analyzer():
 def about_us():
     return render_template("about_us.html")
 
-@app.route("/")
+@app.route("/visualizations")
 def visualizations():
     return render_template("visualizations.html")
+
+@app.route("/api/datatable")
+def datatable():
+
+    session = Session(engine)
+    datatable=[]
+    #results = session.query(results here).all()
+    
+
+    dataresults={"results": datatable}
+    return jsonify (dataresults) 
 
 if __name__ == "__main__":
     app.run()
