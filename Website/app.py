@@ -16,12 +16,12 @@ from sqlalchemy.orm import Session
 #engine = create_engine(os.environ.get('DATABASE_URL', ''))
 
 
-#engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Project2')
+engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Stocks')
 
-# Base = automap_base()
-# Base.prepare(engine, reflect=True)
+Base = automap_base()
+Base.prepare(engine, reflect=True)
 
-# Stock = Base.classes.Stock
+Stocks = Base.classes.Stocks
 
 #################################################
 # Flask Setup
@@ -51,8 +51,18 @@ def datatable():
 
     session = Session(engine)
     datatable=[]
-    #results = session.query(results here).all()
+    results = session.query(Stocks.date, Stocks.close, Stocks.open, Stocks.high, Stocks.low).all()
     
+    date = [result[0] for result in results]
+    datatable.append(date)
+    close = [result[1] for result in results]
+    datatable.append(close)
+    open = [result[2] for result in results]
+    datatable.append(open)
+    high = [result[3] for result in results]
+    datatable.append(high)
+    low = [result[4] for result in results]
+    datatable.append(low)
 
     dataresults={"results": datatable}
     return jsonify (dataresults) 
