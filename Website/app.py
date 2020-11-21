@@ -16,12 +16,12 @@ from sqlalchemy.orm import Session
 engine = create_engine(os.environ.get('DATABASE_URL', ''))
 
 
-# engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Stocks')
+# engine = create_engine(f'postgres://osifuxgjnarnus:a02625bbbff82478924acd4f8bee4105c3931e214c799ee67df98ca31fb47ddd@ec2-3-220-98-137.compute-1.amazonaws.com:5432/deed6otvdvkm17')
 
 Base = automap_base()
 Base.prepare(engine, reflect=True)
 
-Stocks = Base.classes.Stocks
+Stocks = Base.classes.historical_and_results
 
 #################################################
 # Flask Setup
