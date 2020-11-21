@@ -13,10 +13,10 @@ from sqlalchemy.orm import Session
 
 #from config import username, password
 
-#engine = create_engine(os.environ.get('DATABASE_URL', ''))
+engine = create_engine(os.environ.get('DATABASE_URL', ''))
 
 
-engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Stocks')
+# engine = create_engine(f'postgresql://{username}:{password}@localhost:5432/Stocks')
 
 Base = automap_base()
 Base.prepare(engine, reflect=True)
