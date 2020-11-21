@@ -28,6 +28,7 @@ Stocks = Base.classes.historical_and_results
 #################################################
 app = Flask(__name__)
 
+model = pickle.load(open('ARIMA.pkl','rb'))
 
 # create route that renders index.html template
 @app.route("/")
@@ -57,15 +58,30 @@ def datatable():
     datatable.append(date)
     close = [result[1] for result in results]
     datatable.append(close)
-    open = [result[2] for result in results]
+    open = [result[3] for result in results]
     datatable.append(open)
-    high = [result[3] for result in results]
+    high = [result[4] for result in results]
     datatable.append(high)
-    low = [result[4] for result in results]
+    low = [result[5] for result in results]
     datatable.append(low)
+    predicted = [result[6] for result in results]
+    datatable.append(predicted)
+    actual = [result[7] for result in results]
+    datatable.append(actual)
+    diference = [result[8] for result in results]
+    datatable.append(diference)
 
     dataresults={"results": datatable}
     return jsonify (dataresults) 
+
+@app.route('/api',methods=['POST', ‘GET’])
+ def predict():
+    # Get the data from the POST request.
+    data = request.get_json(force=True)   
+   # Make prediction using model loaded from disk as per the data.
+    prediction = model.predict([[np.array(data['exp'])]])   
+   # Take the first value of prediction
+    output = prediction[0]   
 
 if __name__ == "__main__":
     app.run()
