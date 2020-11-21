@@ -1,5 +1,8 @@
 # import necessary libraries
 import os
+import pickle
+import numpy as np
+import pmdarima
 from flask import (
     Flask,
     render_template,
@@ -13,10 +16,10 @@ from sqlalchemy.orm import Session
 
 #from config import username, password
 
-engine = create_engine(os.environ.get('DATABASE_URL', ''))
+# engine = create_engine(os.environ.get('DATABASE_URL', ''))
 
 
-# engine = create_engine(f'postgres://osifuxgjnarnus:a02625bbbff82478924acd4f8bee4105c3931e214c799ee67df98ca31fb47ddd@ec2-3-220-98-137.compute-1.amazonaws.com:5432/deed6otvdvkm17')
+engine = create_engine(f'postgres://osifuxgjnarnus:a02625bbbff82478924acd4f8bee4105c3931e214c799ee67df98ca31fb47ddd@ec2-3-220-98-137.compute-1.amazonaws.com:5432/deed6otvdvkm17')
 
 Base = automap_base()
 Base.prepare(engine, reflect=True)
@@ -74,14 +77,17 @@ def datatable():
     dataresults={"results": datatable}
     return jsonify (dataresults) 
 
-@app.route('/api',methods=['POST', ‘GET’])
- def predict():
-    # Get the data from the POST request.
-    data = request.get_json(force=True)   
-   # Make prediction using model loaded from disk as per the data.
-    prediction = model.predict([[np.array(data['exp'])]])   
-   # Take the first value of prediction
-    output = prediction[0]   
+@app.route('/api',methods=['POST'])
+def predict():
+# Get the data from the POST request.
+    if request.method == "POST":
+        form_data = request.form
+# # Make prediction using model loaded from disk as per the data.
+    prediction = model.predict(int(form_data['Day']))
+# # Take the first value of prediction
+    output = prediction[-1]
+    return jsonify(output)
+
 
 if __name__ == "__main__":
     app.run()
